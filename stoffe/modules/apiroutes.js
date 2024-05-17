@@ -17,7 +17,6 @@ apiRoutes.get('/employees', async (req, res) => {
     try {
         let sql = 'SELECT * FROM `employees`';
         let values = [];
-        const baseQueryLength = sql.length;
 
         // Filter by age
         if (req.query.age) {
@@ -26,12 +25,12 @@ apiRoutes.get('/employees', async (req, res) => {
         }
         // Filter by department
         if (req.query.department) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " department_id = ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " department_id = ?";
             values.push(req.query.department);
         }
         // Filter by API name
         if (req.query.name) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " name LIKE ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " name LIKE ?";
             values.push(`%${req.query.name}%`);
         }
 
@@ -48,45 +47,44 @@ apiRoutes.get('/projects', async (req, res) => {
     try {
         let sql = 'SELECT name, DATE_FORMAT(startdate, "%Y-%m-%d") AS startdate, DATE_FORMAT(enddate, "%Y-%m-%d") AS enddate FROM `projects`';
         let values = [];
-        const baseQueryLength = sql.length;
 
         // Filter by startdate
         if (req.query.startdate) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " startdate = ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " startdate = ?";
             values.push(req.query.startdate);
         }
         if (req.query.startdate_gt) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " startdate > ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " startdate > ?";
             values.push(req.query.startdate_gt);
         }
         if (req.query.startdate_lt) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " startdate < ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " startdate < ?";
             values.push(req.query.startdate_lt);
         }
 
         // Filter by enddate
         if (req.query.enddate) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " enddate = ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " enddate = ?";
             values.push(req.query.enddate);
         }
         if (req.query.enddate_gt) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " enddate > ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " enddate > ?";
             values.push(req.query.enddate_gt);
         }
         if (req.query.enddate_lt) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " enddate < ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " enddate < ?";
             values.push(req.query.enddate_lt);
         }
 
         // Filter by name
         if (req.query.name) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " name LIKE ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " name LIKE ?";
             values.push(`%${req.query.name}%`);
         }
 
         // Filter by id
         if (req.query.id) {
-            sql += (sql.length == baseQueryLength ? ' WHERE' : ' AND') + " id = ?";
+            sql += (values.length == 0 ? ' WHERE' : ' AND') + " id = ?";
             values.push(req.query.id);
         }
 
