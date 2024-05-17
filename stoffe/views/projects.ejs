@@ -1,0 +1,78 @@
+<%- include("parts/header", {pageTitle}); %>
+<body>
+    <%- include("parts/nav", {currentPage: "projects"}) %>
+    <% 
+    let showingProject = false;
+    if (projectInfo.id > 0) { 
+        showingProject = true;
+    }
+    %>
+    <div class="project-picker">
+        <form action="/projects" METHOD="GET" id="projectform">
+            <label for="projectform-id">Project</label>
+            <select name="projectid" id="projectform-id">
+                <% if (projectOptions) { %>
+                <% projectOptions.forEach( (project) => { %>
+                <option value="<%= project.id %>" <%= (projectInfo.id == project.id ? ' selected' : ' ') %>><%= project.name %></option>
+                <% }); %>
+                <% } else { %>
+                <option value="0">- no projects -</option>
+                <% } %>
+            </select>
+            <button>Show project</button>
+        </form>
+        <div><button id="create-project-button">New project</button></div>
+        <% if (showingProject) { %><div><button id="delete-project-button">Delete project</button></div><% } %>
+    </div>
+    <h1><%= pageTitle %></h1>
+    <div class="project-info">
+        <% if (showingProject) { %>
+        <div><strong>Start date</strong>: <%= projectInfo.startdate %></div>
+        <div><strong>End date</strong>: <%= projectInfo.enddate %></div>
+        <% } else { %>
+        <div class="infomessage">Select a project to display.</div>
+        <% } %>
+    </div>
+    <% if (showingProject) { %>
+    <div class="project-members">
+        <h2>Project members</h2>
+        <form name="removemember-form" id="removemember-form" method="POST" action="/project/member/remove">
+            <% if (projectMembers.length) { %>
+            <% projectMembers.forEach( (member) => {  %>
+            <div class="project-member">
+                <div><%= member.name %></div>
+                <div><%= member.department %></div>
+                <div><button name="removemember" class="project-member-remove" value="<%= member.id %>">X</button></div>
+            </div>
+            <% }); %>
+            <% } else { %>
+            <div class="nomembers">This project currently has no members.</div>
+            <% } %>
+            <input type="hidden" name="projectid" value="<%= projectInfo.id %>">
+        </form>
+    </div>
+    <div class="project-members-form">
+        <form id="project-add-member" action="/project/member/add" method="POST">
+            <select name="employeeid">
+                <% employeesList.forEach( (employee) => { %>
+                <option value="<%= employee.id %>"><%= employee.name %></option>
+                <% }); %>
+            </select>
+            <input type="hidden" name="projectid" value="<%= projectInfo.id %>">
+            <button>Add project member</button>
+        </form>
+    </div>
+    <% } %>
+    <dialog id="create-project-dialog">
+        <form id="create-project-form" method="POST" action="/project/add">
+            <label for="create-project-name">Project name</label>
+            <input type="text" name="name" id="create-project-name">
+            <label for="create-project-startdate">Start date</label>
+            <input type="date" name="startdate" id="create-project-startdate">
+            <label for="create-project-enddate">End date</label>
+            <input type="date" name="enddate" id="create-project-enddate">
+            <button>Create project</button>
+        </form>
+    </dialog>
+</body>
+</html>

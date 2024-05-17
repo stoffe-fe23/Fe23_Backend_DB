@@ -1,0 +1,65 @@
+<%- include("parts/header", {pageTitle}); %>
+<body>
+    <%- include("parts/nav", {currentPage: "employees"}) %>
+    <h1>
+        <%= pageTitle %>
+    </h1>
+    <div class="employee-list">
+        <div class="employee-row">
+            <div class="heading employee-name">Employee name</div>
+            <div class="heading employee-age">Age</div>
+            <div class="heading employee-department">Department</div>
+            <div class="heading employee-edit">&nbsp;</div>
+        </div>
+        <% employeeRows.forEach( (row)=> { %>
+        <div class="employee-row">
+            <div class="employee-name"><%= row.name %></div>
+            <div class="employee-age"><%= row.age %></div>
+            <div class="employee-department"><%= row.department %></div>
+            <div class="employee-edit"><button name="editemployee" value="<%= row.id %>">Edit</button></div>
+        </div>
+        <% }); %>
+    </div>
+    <div class="employee-new">
+        <form id="employee-new-form" name="employeenewform" method="POST" action="/employee/add">
+            <label for="new-employee-name">Name</label>
+            <input type="text" name="name" id="new-employee-name">
+            <label for="new-employee-age">Age</label>
+            <input type="text" name="age" id="new-employee-age">
+            <label for="new-employee-department">Department</label>
+            <select name="department" id="new-employee-department">
+                <% departmentRows.forEach( (dept) => { %>
+                <option value="<%= dept.id %>"><%= dept.name %></option>
+                <% }); %>
+            </select>
+            <button>Add employee</button>
+        </form>
+    </div>
+    <dialog id="employee-edit-dialog">
+        <h2>Edit employee</h2>
+        <form id="employee-edit-form" method="POST" action="/employee/edit">
+            <div>
+                <label for="employee-edit-name">Name</label>
+                <input type="text" name="name" value="" id="employee-edit-name">
+            </div>
+            <div>
+                <label for="employee-edit-age">Age</label>
+                <input type="text" name="age" value="" id="employee-edit-age">
+            </div>
+            <div>
+                <label for="employee-edit-department">Department</label>
+                <select name="department_id" id="employee-edit-department">
+                    <% departmentRows.forEach( (dept) => { %>
+                    <option value="<%= dept.id %>"><%= dept.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <input type="hidden" name="id" value="" id="employee-edit-id">
+            <div id="employee-edit-buttons">
+                <button id="employee-edit-save" name="submitbutton" value="save">Save</button>
+                <button id="employee-edit-delete" name="submitbutton" value="delete">Delete</button>
+            </div>
+        </form>
+    </dialog>
+</body>
+</html>
